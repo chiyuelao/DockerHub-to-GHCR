@@ -48,4 +48,12 @@ jobs:
             fi
           fi
           echo "New version detected. Will push to GHCR."
-          echo "HIST_TARGET=$HIST_TARGET" >> $GITH
+          echo "HIST_TARGET=$HIST_TARGET" >> $GITHUB_ENV
+          echo "LATEST_TARGET=$LATEST_TARGET" >> $GITHUB_ENV
+
+      - name: Tag and push image
+        run: |
+          docker tag ${{ github.event.inputs.source_image }} $HIST_TARGET
+          docker tag ${{ github.event.inputs.source_image }} $LATEST_TARGET
+          docker push $HIST_TARGET
+          docker push $LATEST_TARGET
